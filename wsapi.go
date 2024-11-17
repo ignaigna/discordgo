@@ -515,21 +515,6 @@ func (s *Session) RequestGuildMembersBatchList(guildIDs []string, userIDs []stri
 	return
 }
 
-// GatewayWriteStruct allows for sending raw gateway structs over the gateway.
-func (s *Session) GatewayWriteStruct(data interface{}) (err error) {
-	s.RLock()
-	defer s.RUnlock()
-	if s.wsConn == nil {
-		return ErrWSNotFound
-	}
-
-	s.wsMutex.Lock()
-	err = s.wsConn.WriteJSON(data)
-	s.wsMutex.Unlock()
-
-	return err
-}
-
 func (s *Session) requestGuildMembers(data requestGuildMembersData) (err error) {
 	s.log(LogInformational, "called")
 
@@ -697,10 +682,10 @@ type voiceChannelJoinOp struct {
 
 // ChannelVoiceJoin joins the session user to a voice channel.
 //
-//    gID     : Guild ID of the channel to join.
-//    cID     : Channel ID of the channel to join.
-//    mute    : If true, you will be set to muted upon joining.
-//    deaf    : If true, you will be set to deafened upon joining.
+//	gID     : Guild ID of the channel to join.
+//	cID     : Channel ID of the channel to join.
+//	mute    : If true, you will be set to muted upon joining.
+//	deaf    : If true, you will be set to deafened upon joining.
 func (s *Session) ChannelVoiceJoin(gID, cID string, mute, deaf bool) (voice *VoiceConnection, err error) {
 
 	s.log(LogInformational, "called")
@@ -744,10 +729,10 @@ func (s *Session) ChannelVoiceJoin(gID, cID string, mute, deaf bool) (voice *Voi
 //
 // This should only be used when the VoiceServerUpdate will be intercepted and used elsewhere.
 //
-//    gID     : Guild ID of the channel to join.
-//    cID     : Channel ID of the channel to join, leave empty to disconnect.
-//    mute    : If true, you will be set to muted upon joining.
-//    deaf    : If true, you will be set to deafened upon joining.
+//	gID     : Guild ID of the channel to join.
+//	cID     : Channel ID of the channel to join, leave empty to disconnect.
+//	mute    : If true, you will be set to muted upon joining.
+//	deaf    : If true, you will be set to deafened upon joining.
 func (s *Session) ChannelVoiceJoinManual(gID, cID string, mute, deaf bool) (err error) {
 
 	s.log(LogInformational, "called")
@@ -830,6 +815,26 @@ func (s *Session) onVoiceServerUpdate(st *VoiceServerUpdate) {
 	if err != nil {
 		s.log(LogError, "onVoiceServerUpdate voice.open, %s", err)
 	}
+}
+
+type lazyGuildOp struct {
+	Op   int       `json:"op"`
+	Data LazyGuild `json:"d"`
+}
+
+// LazyGuild sends the lazy_guild packet with the specified arguments
+func (s *Session) LazyGuild(packet LazyGuild) error {
+	s.log(LogDebug, "called")
+
+	// Send LazyGuild packet to Discord
+	op := lazyGuildOp{14, packet}
+	s.log(LogDebug, "Lazy Guild Packet: \n%#v", op)
+
+	s.wsMutex.Lock()
+	err := s.wsConn.WriteJSON(op)
+	s.wsMutex.Unlock()
+
+	return err
 }
 
 type identifyOp struct {
