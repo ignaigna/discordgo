@@ -118,7 +118,7 @@ type Session struct {
 	onceHandlers map[string][]*eventHandlerInstance
 
 	// The websocket connection.
-	wsConn *websocket.Conn
+	WSConn *websocket.Conn
 
 	// When nil, the session is not listening.
 	listening chan interface{}
@@ -133,7 +133,7 @@ type Session struct {
 	sessionID string
 
 	// used to make sure gateway websocket writes do not happen concurrently
-	wsMutex sync.Mutex
+	WSMutex sync.Mutex
 }
 
 func (s *Session) Write14(guild, channel string) {
@@ -157,12 +157,12 @@ func (s *Session) Write14(guild, channel string) {
 
 	fmt.Println("strir", string(j))
 
-	s.wsMutex.Lock()
-	err = s.wsConn.WriteMessage(websocket.TextMessage, j)
+	s.WSMutex.Lock()
+	err = s.WSConn.WriteMessage(websocket.TextMessage, j)
 	if err != nil {
 		panic(err)
 	}
-	s.wsMutex.Unlock()
+	s.WSMutex.Unlock()
 }
 
 // ApplicationIntegrationType dictates where application can be installed and its available interaction contexts.
