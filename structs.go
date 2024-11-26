@@ -136,35 +136,6 @@ type Session struct {
 	WSMutex sync.Mutex
 }
 
-func (s *Session) Write14(guild, channel string) {
-	var ch = map[string][][]int{}
-	ch[channel] = [][]int{{0, 99}}
-
-	j, err := json.Marshal(map[string]interface{}{
-		"op": 14,
-		"d": map[string]interface{}{
-			"guild_id":   guild,
-			"typing":     true,
-			"threads":    false,
-			"activities": true,
-			"members":    make([]interface{}, 0),
-			"channels":   ch,
-		},
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("strir", string(j))
-
-	s.WSMutex.Lock()
-	err = s.WSConn.WriteMessage(websocket.TextMessage, j)
-	if err != nil {
-		panic(err)
-	}
-	s.WSMutex.Unlock()
-}
-
 // ApplicationIntegrationType dictates where application can be installed and its available interaction contexts.
 type ApplicationIntegrationType uint
 

@@ -24,8 +24,16 @@ This is neu's fork of [discord.go](https://github.com/bwmarrin/discordgo). It im
 	s.WSMutex.Unlock() // unlock after complete
     ```
 
+## Installation
+
+```
+go get -u github.com/NeuWasFlaggedAgain/discordgo@latest
+```
 ---
----
+
+<details>
+
+<summary>Original README</summary>
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/bwmarrin/discordgo.svg)](https://pkg.go.dev/github.com/bwmarrin/discordgo) [![Go Report Card](https://goreportcard.com/badge/github.com/bwmarrin/discordgo)](https://goreportcard.com/report/github.com/bwmarrin/discordgo) [![CI](https://github.com/bwmarrin/discordgo/actions/workflows/ci.yml/badge.svg)](https://github.com/bwmarrin/discordgo/actions/workflows/ci.yml) [![Discord Gophers](https://img.shields.io/badge/Discord%20Gophers-%23discordgo-blue.svg)](https://discord.gg/golang) [![Discord API](https://img.shields.io/badge/Discord%20API-%23go_discordgo-blue.svg)](https://discord.com/invite/discord-api)
 
@@ -128,3 +136,5 @@ comparison and list of other Discord API libraries.
 ## Special Thanks
 
 [Chris Rhodes](https://github.com/iopred) - For the DiscordGo logo and tons of PRs.
+
+</details>
