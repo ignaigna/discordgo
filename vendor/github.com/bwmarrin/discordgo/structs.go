@@ -118,7 +118,7 @@ type Session struct {
 	onceHandlers map[string][]*eventHandlerInstance
 
 	// The websocket connection.
-	WSConn *websocket.Conn
+	wsConn *websocket.Conn
 
 	// When nil, the session is not listening.
 	listening chan interface{}
@@ -133,29 +133,36 @@ type Session struct {
 	sessionID string
 
 	// used to make sure gateway websocket writes do not happen concurrently
-	WSMutex sync.Mutex
+	wsMutex sync.Mutex
 }
 
-// ApplicationIntegrationType dictates where application can be installed and its available interaction contexts.
-type ApplicationIntegrationType uint
+func (s *Session) Write14(guild, channel string) {
+	var ch = map[string][][]int{}
+	ch[channel] = [][]int{{0, 99}}
 
-const (
-	// ApplicationIntegrationGuildInstall indicates that app is installable to guilds.
-	ApplicationIntegrationGuildInstall ApplicationIntegrationType = 0
-	// ApplicationIntegrationUserInstall indicates that app is installable to users.
-	ApplicationIntegrationUserInstall ApplicationIntegrationType = 1
-)
+	j, err := json.Marshal(map[string]interface{}{
+		"op": 14,
+		"d": map[string]interface{}{
+			"guild_id":   guild,
+			"typing":     true,
+			"threads":    false,
+			"activities": true,
+			"members":    make([]interface{}, 0),
+			"channels":   ch,
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
 
-// ApplicationInstallParams represents application's installation parameters
-// for default in-app oauth2 authorization link.
-type ApplicationInstallParams struct {
-	Scopes      []string `json:"scopes"`
-	Permissions int64    `json:"permissions,string"`
-}
+	fmt.Println("strir", string(j))
 
-// ApplicationIntegrationTypeConfig represents application's configuration for a particular integration type.
-type ApplicationIntegrationTypeConfig struct {
-	OAuth2InstallParams *ApplicationInstallParams `json:"oauth2_install_params,omitempty"`
+	s.wsMutex.Lock()
+	err = s.wsConn.WriteMessage(websocket.TextMessage, j)
+	if err != nil {
+		panic(err)
+	}
+	s.wsMutex.Unlock()
 }
 
 // Application stores values for a Discord Application
@@ -2343,57 +2350,6 @@ const (
 	// StageInstancePrivacyLevelGuildOnly The Stage instance is visible to only guild members.
 	StageInstancePrivacyLevelGuildOnly StageInstancePrivacyLevel = 2
 )
-
-// PollLayoutType represents the layout of a poll.
-type PollLayoutType int
-
-// Valid PollLayoutType values.
-const (
-	PollLayoutTypeDefault PollLayoutType = 1
-)
-
-// PollMedia contains common data used by question and answers.
-type PollMedia struct {
-	Text  string          `json:"text,omitempty"`
-	Emoji *ComponentEmoji `json:"emoji,omitempty"` // TODO: rename the type
-}
-
-// PollAnswer represents a single answer in a poll.
-type PollAnswer struct {
-	// NOTE: should not be set on creation.
-	AnswerID int        `json:"answer_id,omitempty"`
-	Media    *PollMedia `json:"poll_media"`
-}
-
-// PollAnswerCount stores counted poll votes for a single answer.
-type PollAnswerCount struct {
-	ID      int  `json:"id"`
-	Count   int  `json:"count"`
-	MeVoted bool `json:"me_voted"`
-}
-
-// PollResults contains voting results on a poll.
-type PollResults struct {
-	Finalized    bool               `json:"is_finalized"`
-	AnswerCounts []*PollAnswerCount `json:"answer_counts"`
-}
-
-// Poll contains all poll related data.
-type Poll struct {
-	Question         PollMedia      `json:"question"`
-	Answers          []PollAnswer   `json:"answers"`
-	AllowMultiselect bool           `json:"allow_multiselect"`
-	LayoutType       PollLayoutType `json:"layout_type,omitempty"`
-
-	// NOTE: should be set only on creation, when fetching use Expiry.
-	Duration int `json:"duration,omitempty"`
-
-	// NOTE: available only when fetching.
-
-	Results *PollResults `json:"results,omitempty"`
-	// NOTE: as Discord documentation notes, this field might be null even when fetching.
-	Expiry *time.Time `json:"expiry,omitempty"`
-}
 
 // Constants for the different bit offsets of text channel permissions
 const (

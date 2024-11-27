@@ -1,39 +1,4 @@
-# DiscordGo (FORK)
-
-This is neu's fork of [discord.go](https://github.com/bwmarrin/discordgo). It implements the following additional Discord API features:
-
-- Gateway opcode 14 ([lazy guild](https://web.archive.org/web/20241126202651/https://luna.gitlab.io/discord-unofficial-docs/docs/lazy_guilds/)):
-    ```go
-    lg := discordgo.LazyGuild{
-		GuildID:    g.ID,
-		Typing:     true,
-		Threads:    false,
-		Activities: true,
-		Members:    make([]interface{}, 0),
-	}
-	lg.AddChannel(g.Channels[0].ID, [][]int{{0, 99}})
-
-    // (s is a dgo session)
-	s.LazyGuild(lg)
-    ```
-- Makes the `Session.WSConn` and `Session.WSMutex` public (from an individual request):
-    ```go
-    // e,g
-   	s.WSMutex.Lock() // lock before writing
-	err := s.WSConn.WriteJSON(op) // send your packet
-	s.WSMutex.Unlock() // unlock after complete
-    ```
-
-## Installation
-
-```
-go get -u github.com/NeuWasFlaggedAgain/discordgo@latest
-```
----
-
-<details>
-
-<summary>Original README</summary>
+# DiscordGo
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/bwmarrin/discordgo.svg)](https://pkg.go.dev/github.com/bwmarrin/discordgo) [![Go Report Card](https://goreportcard.com/badge/github.com/bwmarrin/discordgo)](https://goreportcard.com/report/github.com/bwmarrin/discordgo) [![CI](https://github.com/bwmarrin/discordgo/actions/workflows/ci.yml/badge.svg)](https://github.com/bwmarrin/discordgo/actions/workflows/ci.yml) [![Discord Gophers](https://img.shields.io/badge/Discord%20Gophers-%23discordgo-blue.svg)](https://discord.gg/golang) [![Discord API](https://img.shields.io/badge/Discord%20API-%23go_discordgo-blue.svg)](https://discord.com/invite/discord-api)
 
@@ -136,5 +101,3 @@ comparison and list of other Discord API libraries.
 ## Special Thanks
 
 [Chris Rhodes](https://github.com/iopred) - For the DiscordGo logo and tons of PRs.
-
-</details>
