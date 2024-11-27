@@ -12,7 +12,7 @@ package discordgo
 
 import (
 	"bytes"
-	"github.com/goccy/go-json"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"image"
