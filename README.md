@@ -27,7 +27,7 @@ This is neu's fork of [discord.go](https://github.com/bwmarrin/discordgo). It im
 ## Installation
 
 ```
-go get -u github.com/NeuWasFlaggedAgain/discordgo@latest
+go get -u github.com/ignaigna/discordgo@latest
 ```
 ---
 
