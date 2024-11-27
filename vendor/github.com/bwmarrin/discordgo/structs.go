@@ -12,7 +12,7 @@
 package discordgo
 
 import (
-	"github.com/goccy/go-json"
+	"encoding/json"
 	"fmt"
 	"math"
 	"net/http"
@@ -134,35 +134,6 @@ type Session struct {
 
 	// used to make sure gateway websocket writes do not happen concurrently
 	wsMutex sync.Mutex
-}
-
-func (s *Session) Write14(guild, channel string) {
-	var ch = map[string][][]int{}
-	ch[channel] = [][]int{{0, 99}}
-
-	j, err := json.Marshal(map[string]interface{}{
-		"op": 14,
-		"d": map[string]interface{}{
-			"guild_id":   guild,
-			"typing":     true,
-			"threads":    false,
-			"activities": true,
-			"members":    make([]interface{}, 0),
-			"channels":   ch,
-		},
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("strir", string(j))
-
-	s.wsMutex.Lock()
-	err = s.wsConn.WriteMessage(websocket.TextMessage, j)
-	if err != nil {
-		panic(err)
-	}
-	s.wsMutex.Unlock()
 }
 
 // Application stores values for a Discord Application
@@ -2271,12 +2242,11 @@ const (
 type Identify struct {
 	Token          string              `json:"token"`
 	Properties     IdentifyProperties  `json:"properties"`
-	Capabilities   int                 `json:"capabilities"`
 	Compress       bool                `json:"compress"`
 	LargeThreshold int                 `json:"large_threshold"`
 	Shard          *[2]int             `json:"shard,omitempty"`
 	Presence       GatewayStatusUpdate `json:"presence,omitempty"`
-	Intents        Intent              `json:"intents,omitempty"`
+	Intents        Intent              `json:"intents"`
 }
 
 // IdentifyProperties contains the "properties" portion of an Identify packet
@@ -2287,25 +2257,6 @@ type IdentifyProperties struct {
 	Device          string `json:"$device"`
 	Referer         string `json:"$referer"`
 	ReferringDomain string `json:"$referring_domain"`
-}
-
-// Identify is sent during initial handshake with the discord gateway.
-// https://discord.com/developers/docs/topics/gateway#identify
-type LazyGuild struct {
-	GuildID    string             `json:"guild_id"`
-	Typing     bool               `json:"typing"`
-	Threads    bool               `json:"threads"`
-	Activities bool               `json:"activities"`
-	Members    []interface{}      `json:"members"`
-	Channels   map[string][][]int `json:"channels"`
-}
-
-func (lg *LazyGuild) AddChannel(id string, ranges [][]int) {
-	if lg.Channels == nil {
-		lg.Channels = map[string][][]int{}
-	}
-
-	lg.Channels[id] = ranges
 }
 
 // StageInstance holds information about a live stage.

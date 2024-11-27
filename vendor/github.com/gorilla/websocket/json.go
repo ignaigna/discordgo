@@ -5,7 +5,7 @@
 package websocket
 
 import (
-	"github.com/goccy/go-json"
+	"encoding/json"
 	"io"
 )
 
