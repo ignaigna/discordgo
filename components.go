@@ -18,6 +18,7 @@ const (
 	RoleSelectMenuComponent        ComponentType = 6
 	MentionableSelectMenuComponent ComponentType = 7
 	ChannelSelectMenuComponent     ComponentType = 8
+	ComponentTypeUnknown           ComponentType = 16 // unknown component type: 16
 )
 
 // MessageComponent is a base interface for all message components.
