@@ -23,6 +23,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -304,7 +305,14 @@ func (s *Session) RequestWithLockedBucket(method, urlStr, contentType string, b 
 	return
 }
 
+var cfErrRegex = regexp.MustCompile(`^error \d{4}$`)
+
 func unmarshal(data []byte, v interface{}) error {
+	// test for a cloudflare ban
+	if cfErrRegex.Match(data) {
+		return fmt.Errorf("cloudflare error: %s", string(data))
+	}
+
 	err := Unmarshal(data, v)
 	if err != nil {
 		return fmt.Errorf("%w: %s", ErrJSONUnmarshal, err)
