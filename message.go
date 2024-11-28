@@ -10,7 +10,7 @@
 package discordgo
 
 import (
-	"github.com/goccy/go-json"
+	"encoding/json"
 	"io"
 	"regexp"
 	"strings"

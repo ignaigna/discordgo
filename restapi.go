@@ -14,7 +14,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/goccy/go-json"
+	"encoding/json"
 	"image"
 	_ "image/jpeg" // For JPEG decoding
 	_ "image/png"  // For PNG decoding
