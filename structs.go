@@ -12,8 +12,8 @@
 package discordgo
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"math"
 	"net/http"
 	"regexp"
