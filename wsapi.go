@@ -15,7 +15,7 @@ import (
 	"compress/zlib"
 	"errors"
 	"fmt"
-	"github.com/goccy/go-json"
+	"encoding/json"
 	"io"
 	"net/http"
 	"sync/atomic"
