@@ -12,8 +12,8 @@
 package discordgo
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/goccy/go-json"
 	"math"
 	"net/http"
 	"regexp"
