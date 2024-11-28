@@ -1,8 +1,8 @@
 package discordgo
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 )
 
 // ComponentType is type of component.
