@@ -13,9 +13,9 @@ package discordgo
 import (
 	"bytes"
 	"compress/zlib"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"encoding/json"
 	"io"
 	"net/http"
 	"sync/atomic"

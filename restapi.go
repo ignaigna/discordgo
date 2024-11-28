@@ -12,9 +12,9 @@ package discordgo
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"encoding/json"
 	"image"
 	_ "image/jpeg" // For JPEG decoding
 	_ "image/png"  // For PNG decoding
