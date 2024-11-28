@@ -5,7 +5,7 @@ import (
 	"crypto/ed25519"
 	"encoding/hex"
 	"fmt"
-	"github.com/goccy/go-json"
+	"encoding/json"
 	"io"
 	"io/ioutil"
 	"net/http"
