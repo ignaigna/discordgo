@@ -13,9 +13,9 @@ package discordgo
 import (
 	"bytes"
 	"compress/zlib"
-	"github.com/goccy/go-json"
 	"errors"
 	"fmt"
+	"github.com/goccy/go-json"
 	"io"
 	"net/http"
 	"sync/atomic"
