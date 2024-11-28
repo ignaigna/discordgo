@@ -1,8 +1,8 @@
 package discordgo
 
 import (
-	"github.com/goccy/go-json"
 	"fmt"
+	"github.com/goccy/go-json"
 )
 
 // ComponentType is type of component.
@@ -51,6 +51,8 @@ func (umc *unmarshalableMessageComponent) UnmarshalJSON(src []byte) error {
 		umc.MessageComponent = &SelectMenu{}
 	case TextInputComponent:
 		umc.MessageComponent = &TextInput{}
+	case ComponentTypeUnknown:
+		umc.MessageComponent = nil // TODO: implement, this: https://github.com/bwmarrin/discordgo/issues/1562
 	default:
 		return fmt.Errorf("unknown component type: %d", v.Type)
 	}

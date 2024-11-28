@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/goccy/go-json"
 	"flag"
 	"fmt"
+	"github.com/goccy/go-json"
 	"net/http"
 	"net/url"
 

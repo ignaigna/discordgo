@@ -11,8 +11,8 @@ package discordgo
 
 import (
 	"encoding/binary"
-	"github.com/goccy/go-json"
 	"fmt"
+	"github.com/goccy/go-json"
 	"net"
 	"strconv"
 	"strings"
