@@ -14,7 +14,16 @@ package discordgo
 import "strconv"
 
 // APIVersion is the Discord API version used for the REST and Websocket API.
+// APIInstances is a list of discord "instances", we can use them to bypass Cloudflare Bans (https://discord.com/developers/docs/topics/rate-limits#invalid-request-limit-aka-cloudflare-bans)
 var APIVersion = "9"
+var APIInstances = []string{
+	"discord.com",
+	"canary.discord.com",
+	"ptb.discord.com",
+}
+
+// ApiInstance is a rotation of the APIInstances
+var ApiInstance = 0
 
 // Known Discord API Endpoints.
 var (
@@ -23,8 +32,11 @@ var (
 	EndpointSmActive   = EndpointSm + "active.json"
 	EndpointSmUpcoming = EndpointSm + "upcoming.json"
 
-	EndpointDiscord        = "https://discord.com/"
-	EndpointAPI            = EndpointDiscord + "api/v" + APIVersion + "/"
+	EndpointDiscord = func() string {
+		ApiInstance = (ApiInstance + 1) % len(APIInstances)
+		return "https://" + APIInstances[ApiInstance] + "/"
+	}
+	EndpointAPI            = EndpointDiscord() + "api/v" + APIVersion + "/"
 	EndpointGuilds         = EndpointAPI + "guilds/"
 	EndpointChannels       = EndpointAPI + "channels/"
 	EndpointUsers          = EndpointAPI + "users/"
